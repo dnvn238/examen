@@ -1,0 +1,14 @@
+PASO 1
+Desde el CMD:
+SQLPLUS  / as sysdba
+
+Ejecute estos comandos
+CREATE USER upc IDENTIFIED BY 123;
+GRANT DBA TO upc;
+
+PASO 2
+Iniciar en Oracle, en mi caso con Oracle SQL Developer
+imagen : SQL_developer.png
+
+PASO 3
+Ejecutar los scripts del archivo database.sql en la carpeta Scripts

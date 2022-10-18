@@ -1,0 +1,130 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h1>Prestamo</h1>
+
+<div class="container">
+    <div class="row">
+        <select class="form-control" id="cboUsuario">
+            <option id="-1">Seleccionar Usuario</option>
+        </select>
+    </div>
+
+
+
+    <div style="height: 20px"></div>
+    <div class="row">
+
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Libro</label>
+            <select class="form-control" id="cboLibro">
+                <option id="-1">Seleccionar Libro</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Fecha Devolucion</label>
+            <input type="date" class="form-control" id="txtFechaDevolucion">
+        </div>
+
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Tipo Lectura</label>
+            <select class="form-control" id="cboTipoLectura">
+                <option id="biblioteca">En Biblioteca</option>
+                <option id="casa">En Casa</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="mb-2">
+            <button class="btn btn-primary" id="btnPrestar">Guardar Prestamo</button>
+        </div>
+    </div>
+    <hr />
+
+    <div style="height: 20px"></div>
+   
+</div>
+
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        _IdPrestamo = "";
+
+        getAllUsuarios();
+        getAllLibros();
+ 
+        function convertFecha(f) {
+            var nueva = f.split("T")[0];
+            var format = nueva.split("-");
+            var fecha = format[2] + '-' + format[1] + '-' + format[0]
+            return fecha;
+        }
+
+        function getAllUsuarios() {
+
+            $.getJSON("/Usuario/GetAll", function (usuarios) {
+
+                $.map(usuarios, function (usuario) {
+                    console.log(usuario);
+                    $('#cboUsuario').append('<option value="' + usuario.idusuario + '">' + usuario.nombres + '</option>');
+
+                });
+            });
+        }
+
+        function getAllLibros() {
+
+            $.getJSON("/Libro/GetAll", function (libros) {
+
+                $.map(libros, function (libro) {
+                    console.log(libro);
+                    $('#cboLibro').append('<option value="' + libro.idlibro + '">' + libro.nombre + '</option>');
+                });
+            });
+        }
+
+
+        $("#btnPrestar").click(function () {
+
+            var oPrestamo = {
+                idlibro: $("#cboLibro option:selected").val(),
+                idusuario: $("#cboUsuario option:selected").val(),
+                fechadevolucion: $("#txtFechaDevolucion").val(),
+                tipolectura: $("#cboTipoLectura option:selected").val(),
+            };
+
+            console.log(oPrestamo);
+
+            $.post("/Prestamo/Post", oPrestamo)
+                .done(function (prestamo) {
+                    console.log(prestamo);
+                    console.log("Grabado exitoso");
+
+                })
+                .fail(function (e) {
+                    console.log(e);
+                    toastr.error('Cantidad de Libros maximo permitido!', 'Prestamo');
+
+                })
+                .always(function () {
+                    console.log("Finalizado");
+                });
+
+        });
+
+        
+
+
+
+    });
+</script>

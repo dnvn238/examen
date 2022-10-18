@@ -1,0 +1,85 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+<h1>Reporte Prestamo</h1>
+
+<div class="container">
+    <div style="height: 20px"></div>
+    <div class="row">
+
+        <table class="table" id="tblReportePrestamo">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">ISBN</th>
+                    <th scope="col">Libro</th>
+                    <th scope="col">Fecha Prestamo</th>
+                    <th scope="col">DNI</th>
+                    <th scope="col">Nombres</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">Tipo Usuario</th>
+                    <th scope="col">Tipo lectura</th>
+                    <th scope="col">Fec. Devolución</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        _IdPrestamo = "";
+
+        reportePrestamo();
+
+        function convertFecha(f) {
+            var nueva = f.split("T")[0];
+            var format = nueva.split("-");
+            var fecha = format[2] + '-' + format[1] + '-' + format[0]
+            return fecha;
+        }
+
+      
+        function reportePrestamo()
+        {
+
+            console.log("Prestamos report");
+
+            $.getJSON("/Prestamo/GetAll", function (prestamos) {
+
+                $.map(prestamos, function (prestamo) {
+                    console.log(prestamo);
+                    $("#tblReportePrestamo tbody").append("<tr>"
+                        + "<td>" + prestamo.idprestamo + "</td>"
+                        + "<td>" + prestamo.libro.isbn + "</td>"
+                        + "<td>" + prestamo.libro.nombre + "</td>"
+                        + "<td>" + convertFecha(prestamo.fechaprestamo) + "</td>"
+                        + "<td>" + prestamo.usuario.dni + "</td>"
+                        + "<td>" + prestamo.usuario.nombres + "</td>"
+                        + "<td>" + prestamo.usuario.apellidos + "</td>"
+                        + "<td>" + prestamo.usuario.tipousuario + "</td>"
+                        + "<td>" + prestamo.tipolectura + "</td>"
+                        + "<td>" + convertFecha(prestamo.fechadevolucion) + "</td>"
+
+                        + "</tr>"
+                    );
+                });
+            });
+        }
+        
+
+
+
+    });
+</script>
